@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Right Choice
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <br><br>
+    <h3>Заповнення альтернатив</h3>
+    <br>
+    <p>Додайте список альтернатив, серед яких ви здійснюєте вибір.</p>
+    <br>
+    <form id="alternatives" method="post">
+        <div id="div_alternative1" class="container-fluid">
+            <p>Альтернатива 1: <input required type="text" name="alternative1" class="form-control"></p>
+        </div>
+        <div id="div_alternative2" class="container-fluid">
+            <p>Альтернатива 2: <input required type="text" name="alternative2" class="form-control"></p>
+        </div>
+    </form>
+    <a id="add_alternative_button" class="btn btn-secondary">Додати</a>
+    <a id="delete_alternative_button" class="btn btn-secondary">Видалити</a>
+    <br> <br>
+    <input form="alternatives" type="submit" class="btn btn-info" value="Далі">
+</div>
+{% endblock %}

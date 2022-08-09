@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Right Choice
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <br><br>
+    <h3>Заповнення відносної значущості альтернатив за категоріями</h3>
+    <br>
+    <p>Вкажіть показник відносної значущості для всіх відношень альтернатив та категорій.</p>
+    <br>
+    <form id="accordance" method="post">
+        <table class="table">
+            <tr>
+                <td></td>
+                {% for c in columns %}
+                <td>{{ categories_names[c-1].get(c) }}</td>
+                {% endfor %}
+            </tr>
+            {% for r in rows %}
+            <tr>
+                <td>{{ alternatives[r-1].get(r) }}</td>
+                {% for c in columns %}
+                <td>
+                    <select name="alternative{{ r }}_category{{ c }}" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+    <br><br>
+    <input form="accordance" type="submit" class="btn btn-info" value="Розрахувати">
+</div>
+{% endblock %}
