@@ -15,7 +15,7 @@ A web application for determining the best alternative under conditions of uncer
 ![](static/images/result.png)
 ![](static/images/result2.png)
 ![](static/images/result3.png)
-![](static/images/result4_.png)
+![](static/images/result4.png)
 
 # Technologies
 * python 3
