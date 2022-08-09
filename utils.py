@@ -27,6 +27,35 @@ def root(basis: int, power: int) -> float:
     return round(sum + 1, 3)
 
 
+def evaluate_iy(value1: float, value2: int) -> float:
+    """
+    Function for calculate IY
+    :param value1: float
+    :param value2: int
+    :return: float
+    """
+
+    iy = round((value1 - value2) / (value2 - 1), 3)
+    return iy
+
+
+def get_max_value(values_list: list, numbers_list: list) -> dict:
+    """
+    Function for getting max value end max index
+    :param values_list: list
+    :param numbers_list: list
+    :return: dict
+    """
+
+    max_value = 0
+    max_number = 0
+    for i in numbers_list:
+        if values_list[i - 1] > max_value:
+            max_value = values_list[i - 1]
+            max_number = i
+    return {'max_value': max_value, 'max_number': max_number}
+
+
 def get_cat_compare_data(categories: list, cat_numbers: list) -> dict:
     """
     Function for getting category comparison data
@@ -35,41 +64,29 @@ def get_cat_compare_data(categories: list, cat_numbers: list) -> dict:
     :return: dict
     """
 
-    cat_comparison_dict = dict()
     cat_alpha_list = list()
     for r in cat_numbers:
-        cat_comparison_dict.update({'accordance' + str(r): {}})
         sum = 0
         for c in cat_numbers:
             cat_r = int(categories[r - 1].get(r))
             cat_c = int(categories[c - 1].get(c))
             if cat_r == cat_c:
-                cat_comparison_dict['accordance' + str(r)] = {'accordance' + str(c): 1}
                 sum += 1
             else:
                 if cat_r > cat_c:
                     div = (cat_r - cat_c + 1) / 1
-                    cat_comparison_dict['accordance' + str(r)] = {
-                        'accordance' + str(c): div
-                    }
                 else:
                     div = 1 / (cat_c - cat_r + 1)
-                    cat_comparison_dict['accordance' + str(r)] = {
-                        'accordance' + str(c): 1 / (cat_c - cat_r + 1)
-                    }
                 sum += div
         cat_alpha_list.append(root(sum, len(cat_numbers)))
 
-    cat_max_alpha = 0
-    max_cat = 0
-    for c in cat_numbers:
-        if cat_alpha_list[c - 1] > cat_max_alpha:
-            cat_max_alpha = cat_alpha_list[c - 1]
-            max_cat = c
+    max_value_dict = get_max_value(cat_alpha_list, cat_numbers)
+    cat_max_alpha = max_value_dict['max_value']
+    max_cat = max_value_dict['max_number']
 
-    iy = round((cat_max_alpha - len(cat_numbers)) / (len(cat_numbers) - 1), 3)
+    iy = evaluate_iy(cat_max_alpha, len(cat_numbers))
 
-    return {'cat_comparison_dict': cat_comparison_dict, 'cat_alpha_list': cat_alpha_list,
+    return {'cat_alpha_list': cat_alpha_list,
             'cat_max_alpha': cat_max_alpha, 'max_cat': max_cat, 'iy': iy}
 
 
@@ -84,45 +101,32 @@ def get_alt_compare_by_cat_list(alternatives: dict, cat_numbers: list, alt_numbe
 
     alt_compare_list = list()
     for cat in cat_numbers:
-        alt_comparison_by_cat_dict = dict()
         alt_alpha_by_cat_list = list()
         for r in alt_numbers:
-            alt_comparison_by_cat_dict.update({'alternative' + str(r): {}})
             sum = 0
             for c in alt_numbers:
                 cat_r = int(alternatives['alternative' + str(r)][cat - 1]['category' + str(cat)])
                 cat_c = int(alternatives['alternative' + str(c)][cat - 1]['category' + str(cat)])
                 if cat_r == cat_c:
-                    alt_comparison_by_cat_dict['alternative' + str(r)] = {'alternative' + str(c): 1}
                     sum += 1
                 else:
                     if cat_r > cat_c:
                         div = (cat_r - cat_c + 1) / 1
-                        alt_comparison_by_cat_dict['alternative' + str(r)] = {
-                            'alternative' + str(c): div
-                        }
                     else:
                         div = 1 / (cat_c - cat_r + 1)
-                        alt_comparison_by_cat_dict['alternative' + str(r)] = {
-                            'alternative' + str(c): 1 / (cat_c - cat_r + 1)
-                        }
                     sum += div
             alt_alpha_by_cat_list.append(root(sum, len(alt_numbers)))
 
-        max_alt = 0
-        alt_max_alpha = 0
-        for a in alt_numbers:
-            if alt_alpha_by_cat_list[a - 1] > alt_max_alpha:
-                alt_max_alpha = alt_alpha_by_cat_list[a - 1]
-                max_alt = a
+        max_value_dict = get_max_value(alt_alpha_by_cat_list, alt_numbers)
+        alt_max_alpha = max_value_dict['max_value']
+        max_alt = max_value_dict['max_number']
 
-        iy_ = round((alt_max_alpha - len(alt_numbers)) / (len(alt_numbers) - 1), 3)
+        iy = evaluate_iy(alt_max_alpha, len(alt_numbers))
 
-        alt_compare_list.append({'category' + str(cat): [{'alt_comparison_by_cat_dict': alt_comparison_by_cat_dict},
-                                                         {'alt_alpha_by_cat_list': alt_alpha_by_cat_list},
+        alt_compare_list.append({'category' + str(cat): [{'alt_alpha_by_cat_list': alt_alpha_by_cat_list},
                                                          {'alt_max_alpha': alt_max_alpha},
                                                          {'max_alt': max_alt},
-                                                         {'iy': iy_}]})
+                                                         {'iy': iy}]})
     return alt_compare_list
 
 
@@ -141,18 +145,16 @@ def get_global_priorities_data(cat_alpha_list: list, alt_compare_list: list, cat
     for r in alt_numbers:
         alt_sum = 0
         for c in cat_numbers:
-            alt_sum = round(alt_sum + alt_compare_list[c - 1]['category' + str(c)][1]['alt_alpha_by_cat_list'][r - 1]
+            alt_sum = round(alt_sum + alt_compare_list[c - 1]['category' + str(c)][0]['alt_alpha_by_cat_list'][r - 1]
                             * cat_alpha_list[c - 1], 3)
         global_priorities_list.append(alt_sum)
 
-    max_priority = 0
-    max_priority_number = 0
-    for a in alt_numbers:
-        if global_priorities_list[a - 1] > max_priority:
-            max_priority_number = a
-            max_priority = global_priorities_list[a - 1]
+    max_value_dict = get_max_value(global_priorities_list, alt_numbers)
+    max_priority = max_value_dict['max_value']
+    max_priority_number = max_value_dict['max_number']
 
-    return {'global_priorities_list': global_priorities_list, 'max_priority': max_priority, 'max_priority_number': max_priority_number}
+    return {'global_priorities_list': global_priorities_list, 'max_priority': max_priority,
+            'max_priority_number': max_priority_number}
 
 
 def get_charts_data(alternatives: list, global_priorities_list: list, alt_numbers: list) -> str:

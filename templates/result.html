@@ -92,10 +92,10 @@ Right Choice
             {% endfor %}
         </table>
         {% for c in alt_number %}
-        <p>α{{ c }} = {{ values_alt[cat-1]['category' + cat|string][1]['alt_alpha_by_cat_list'][c-1] }}</p>
+        <p>α{{ c }} = {{ values_alt[cat-1]['category' + cat|string][0]['alt_alpha_by_cat_list'][c-1] }}</p>
         {% endfor %}
-        <p>α max ({{ alternatives[values_alt[cat-1]['category' + cat|string][3]['max_alt']-1][values_alt[cat-1]['category' + cat|string][3]['max_alt']] }}) = {{ values_alt[cat-1]['category' + cat|string][2]['alt_max_alpha'] }}</p>
-        <p>IY = (α-n)/(n-1) =  {{ values_alt[cat-1]['category' + cat|string][4]['iy'] }}</p>
+        <p>α max ({{ alternatives[values_alt[cat-1]['category' + cat|string][2]['max_alt']-1][values_alt[cat-1]['category' + cat|string][2]['max_alt']] }}) = {{ values_alt[cat-1]['category' + cat|string][1]['alt_max_alpha'] }}</p>
+        <p>IY = (α-n)/(n-1) =  {{ values_alt[cat-1]['category' + cat|string][3]['iy'] }}</p>
     {% endfor %}
 
     <br>
@@ -114,7 +114,7 @@ Right Choice
             <td>{{ alternatives[r-1].get(r) }}</td>
             {% for c in cat_number %}
             <td>
-                {{ values_alt[c-1]['category' + c|string][1]['alt_alpha_by_cat_list'][r-1] }}
+                {{ values_alt[c-1]['category' + c|string][0]['alt_alpha_by_cat_list'][r-1] }}
             </td>
             {% endfor %}
             <td>
